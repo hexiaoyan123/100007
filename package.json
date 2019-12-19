@@ -23,7 +23,7 @@
     "postcss-px-to-viewport": "0.0.3",
     "postcss-viewport-units": "^0.1.4",
     "postcss-write-svg": "^3.0.1",
-    "vant": "^1.1.7",
+    "vant": "^2.1.8",
     "vue": "^2.5.2",
     "vue-cookies": "^1.5.6",
     "vue-finger": "^0.1.0",
