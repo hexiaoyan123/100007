@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-
     <!-- 新头部开始 -->
     <div class="new-header">
       <div class="nh-left" @click="city.show = true">
@@ -12,8 +11,16 @@
       </div>
       <div class="nh-center">
         <div class="nh-center-out">
-          <div class="nh-center-item" :class="{'nh-center-item-on': showType == 1}" @click="showType = 1">热映</div>
-          <div class="nh-center-item" :class="{'nh-center-item-on': showType == 2}" @click="showType = 2">待映</div>
+          <div
+            class="nh-center-item"
+            :class="{'nh-center-item-on': showType == 1}"
+            @click="showType = 1"
+          >热映</div>
+          <div
+            class="nh-center-item"
+            :class="{'nh-center-item-on': showType == 2}"
+            @click="showType = 2"
+          >待映</div>
         </div>
       </div>
     </div>
@@ -26,34 +33,44 @@
     <!-- 城市选择结束 -->
 
     <ul class="move-list" v-show="showType == 1">
-      <li class="move-item clearfix" v-for="(item, index) in hotFilm.list" :key="index" @click="goMovieFilm(item.id)">
+      <li
+        class="move-item clearfix"
+        v-for="(item, index) in hotFilm.list"
+        :key="index"
+        @click="goMovieFilm(item.id)"
+      >
         <div class="move-item-l">
           <figure class="img">
-            <img :src="item.poster" alt="">
+            <img :src="item.poster" alt />
           </figure>
         </div>
         <div class="move-item-r">
-          <h3 class="unoverflow">{{item.name}}</h3>
-          <div class="move-item-lable unoverflow">上映日期：{{item.publishDate}}</div>
+          <h3 class="unoverflow">{{item.filmName}}</h3>
+          <div class="move-item-lable unoverflow">上映日期：{{item.releaseDate}}</div>
           <p class="unoverflow">导演：{{item.director}}</p>
-          <p class="unoverflow">演员：{{item.cast}}</p>
+          <p class="unoverflow">演员：{{item.actor}}</p>
           <span class="move-item-btn" @click.stop="goMovieCinema(item.id)">购票</span>
         </div>
       </li>
     </ul>
 
     <ul class="move-list" v-show="showType == 2">
-      <li class="move-item clearfix" v-for="(item, index) in awaitFilm.list" :key="index" @click="goMovieFilm(item.id)">
+      <li
+        class="move-item clearfix"
+        v-for="(item, index) in awaitFilm.list"
+        :key="index"
+        @click="goMovieFilm(item.id)"
+      >
         <div class="move-item-l">
           <figure class="img">
-            <img :src="item.poster" alt="">
+            <img :src="item.poster" alt />
           </figure>
         </div>
         <div class="move-item-r">
-          <h3 class="unoverflow">{{item.name}}</h3>
-          <div class="move-item-lable unoverflow">上映日期：{{item.publishDate}}</div>
+          <h3 class="unoverflow">{{item.filmName}}</h3>
+          <div class="move-item-lable unoverflow">上映日期：{{item.releaseDate}}</div>
           <p class="unoverflow">导演：{{item.director}}</p>
-          <p class="unoverflow">演员：{{item.cast}}</p>
+          <p class="unoverflow">演员：{{item.actor}}</p>
           <!-- <span class="move-item-btn" @click.stop="goMovieCinema(item.id)">购票</span> -->
         </div>
       </li>
@@ -64,43 +81,49 @@
 </template>
 
 <script>
-import BottomBarMovie from './BottomBarMovie'
-import MovieCity from './MovieCity'
-import vMap  from './Map'
+import BottomBarMovie from "./BottomBarMovie";
+import MovieCity from "./MovieCity";
+import vMap from "./Map";
 export default {
-  name: 'MovieCinema',
+  name: "MovieCinema",
   components: {
-    'movie-city': MovieCity,
-    'bottom-bar-movie': BottomBarMovie
+    "movie-city": MovieCity,
+    "bottom-bar-movie": BottomBarMovie
   },
-  data () {
+  data() {
     return {
       // 城市
       city: {
         show: false, //城市弹窗
-        city: {}, // 选中的地址
+        city: {} // 选中的地址
       },
       // 热门
       hotFilm: {
-        list: [],
+        list: []
       },
       // 待映
       awaitFilm: {
         list: []
       },
-      showType: 1, // 类型切换
-    }
+      showType: 1 // 类型切换
+    };
   },
-  created () {
+  created() {
     // 城市处理
-    if(this.$init.moveCity){
+    if (this.$init.moveCity) {
       this.getCity(this.$init.moveCity);
-    }else if(window.localStorage.getItem('moveCity')){
-      let data = JSON.parse(window.localStorage.getItem('moveCity'));
+    } else if (window.localStorage.getItem("moveCity")) {
+      let data = JSON.parse(window.localStorage.getItem("moveCity"));
       this.getCity(data);
-    }else{
-      let city = {"id":"110100","parentId":"110000","grade":"2","name":"北京","abbr":"B"}
-      window.localStorage.setItem('moveCity', JSON.stringify(city));
+    } else {
+      let city = {
+        id: "110100",
+        parentId: "110000",
+        grade: "2",
+        name: "北京",
+        abbr: "B"
+      };
+      window.localStorage.setItem("moveCity", JSON.stringify(city));
       this.getCity(city);
     }
     this.getListHotFilm();
@@ -108,80 +131,90 @@ export default {
   },
   methods: {
     // 关闭城市选择
-    closeCityModo (data) {
+    closeCityModo(data) {
       this.city.show = false;
     },
     // 获得选中的地址
-    getCity (data) {
+    getCity(data) {
       this.city.city = data;
       this.$init.moveCity = data;
-      window.localStorage.setItem('moveCity', JSON.stringify(data));
+      window.localStorage.setItem("moveCity", JSON.stringify(data));
       this.city.show = false;
     },
     // 获得热影片
-    getListHotFilm () {
+    getListHotFilm() {
       let vm = this;
-      this.$http.get('/panda-cinema-api/v1/listHotFilm/' + this.city.city.id, this.$init.channel.movie).then(function (response) {
-        if(response.data.code == '1000'){
-          if(response.data.result){
-            vm.hotFilm.list = response.data.result
-          }else{
-            vm.hotFilm.list = [];
+      this.$http
+        .get(
+          "/panda-cinema-api/v2/listHotFilm/" + this.city.city.id,
+          this.$init.channel.movie
+        )
+        .then(function(response) {
+          if (response.data.code == "1000") {
+            if (response.data.result) {
+              vm.hotFilm.list = response.data.result;
+            } else {
+              vm.hotFilm.list = [];
+            }
+          } else {
+            vm.$toast(response.data.msg);
           }
-        }else{
-          vm.$toast(response.data.msg)
-        }
-      })
-      .catch(function (error) {
-        vm.$toast('请求超时，请稍后再试！')
-      });
+        })
+        .catch(function(error) {
+          vm.$toast("请求超时，请稍后再试！");
+        });
     },
     // 获得待映影片
-    getListAwaitFilm () {
+    getListAwaitFilm() {
       let vm = this;
-      this.$http.get('/panda-cinema-api/v1/listAwaitFilm', this.$init.channel.movie).then(function (response) {
-        if(response.data.code == '1000'){
-          if(response.data.result){
-            vm.awaitFilm.list = response.data.result
-          }else{
-            vm.awaitFilm.list = [];
+      this.$http
+        .get(
+          "/panda-cinema-api/v2/listComingFilm/" + vm.city.city.id,
+          this.$init.channel.movie
+        )
+        .then(function(response) {
+          if (response.data.code == "1000") {
+            if (response.data.result) {
+              vm.awaitFilm.list = response.data.result;
+            } else {
+              vm.awaitFilm.list = [];
+            }
+          } else {
+            vm.$toast(response.data.msg);
           }
-        }else{
-          vm.$toast(response.data.msg)
-        }
-      })
-      .catch(function (error) {
-        vm.$toast('请求超时，请稍后再试！')
-      });
+        })
+        .catch(function(error) {
+          vm.$toast("请求超时，请稍后再试！");
+        });
     },
     // 购票
-    goMovieCinema (id) {
-      this.$router.push('/movieC/'+id);
+    goMovieCinema(id) {
+      this.$router.push("/movieC/" + id);
     },
     // 电影详情
-    goMovieFilm (id) {
-      this.$router.push('/movieFilm/'+id);
+    goMovieFilm(id) {
+      this.$router.push("/movieFilm/" + id);
     },
     // 返回上一页
-    goBack () {
+    goBack() {
       this.$router.back(-1);
-    },
+    }
   }
-}
+};
 </script>
 
 <style scoped>
-.container{
+.container {
   background-color: #fff;
   /* padding-top: 85px; */
   padding-bottom: 88px;
 }
-.top img{
+.top img {
   display: block;
   width: 100%;
 }
 
-header{
+header {
   height: 85px;
   line-height: 85px;
   /* position: absolute; */
@@ -196,72 +229,72 @@ header{
   font-size: 28px;
   z-index: 101;
 }
-.header-back{
+.header-back {
   width: 70px;
   text-align: center;
 }
-.header-cont{
+.header-cont {
   flex: 10;
 }
-.header-more{
+.header-more {
   width: 75px;
   text-align: center;
 }
-header .iconfont{
+header .iconfont {
   font-size: 28px;
 }
 
-.move-list{
+.move-list {
   width: 100%;
   overflow: hidden;
 }
-.move-item{
+.move-item {
   padding: 20px;
   box-sizing: border-box;
   border-bottom: 1px solid #e6e6e6;
 }
-.move-item-r{
+.move-item-r {
   padding-left: 20px;
   width: 80%;
   float: right;
   box-sizing: border-box;
   position: relative;
 }
-.move-item-l{
+.move-item-l {
   width: 20%;
   float: left;
 }
-.move-item-l .img{
+.move-item-l .img {
   display: block;
   width: 100%;
   height: 180px;
   overflow: hidden;
   border-radius: 5px;
 }
-.move-item-l .img img{
+.move-item-l .img img {
   display: block;
   height: 100%;
   width: 100%;
 }
-.move-item-r h3{
+.move-item-r h3 {
   font-size: 36px;
   line-height: 50px;
   font-weight: 700;
   /* padding-bottom: 12px; */
 }
-.move-item-lable{
+.move-item-lable {
   font-size: 27px;
   line-height: 44px;
   margin-top: 10px;
   /* margin-bottom: 40px; */
 }
-.move-item-r p{
+.move-item-r p {
   font-size: 27px;
   line-height: 44px;
   /* margin-top: 16px; */
   width: 70%;
 }
-.move-item-btn{
+.move-item-btn {
   position: absolute;
   display: block;
   line-height: 60px;
@@ -274,7 +307,7 @@ header .iconfont{
 }
 
 /* 改版头部 */
-.new-header{
+.new-header {
   position: relative;
   box-sizing: border-box;
   background-color: #fff;
@@ -283,17 +316,17 @@ header .iconfont{
   line-height: 88px;
   text-align: center;
 }
-.new-header i{
-font-size: 30px;
+.new-header i {
+  font-size: 30px;
   line-height: 88px;
 }
-.nh-left{
+.nh-left {
   position: absolute;
   left: 20px;
   color: #989898;
   padding-left: 45px;
 }
-.nh-center-out{
+.nh-center-out {
   display: inline-block;
   margin: 0 auto;
   border: 4px solid #00a8ec;
@@ -302,15 +335,15 @@ font-size: 30px;
   border-radius: 4px;
   /* overflow: hidden; */
 }
-.nh-center-item{
+.nh-center-item {
   display: inline-block;
   width: 160px;
 }
-.nh-center-item-on{
+.nh-center-item-on {
   color: #fff;
   background-color: #00a8ec;
 }
-.nh-left-map{
+.nh-left-map {
   display: inline-block;
   height: 36px;
   width: 36px;
@@ -323,7 +356,7 @@ font-size: 30px;
 </style>
 
 <style>
-.van-popup--right{
+.van-popup--right {
   height: 100%;
   width: 100%;
   background-color: #fff;
